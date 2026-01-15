@@ -5,10 +5,13 @@ import { db } from "../db";
 
 export const subjectRetrieval = async (req: express.Request, res: express.Response) => {
     try {
-        const { search, department, page = 1, limit = 10 } = req.query;
+        const { search, department, page = '1', limit = '10' } = req.query;
 
-        const currentPage = Math.max(1, +page);
-        const limitPerPage = Math.max(1, +limit);
+        const pageParam = Array.isArray(page) ? page[0] : page;
+        const limitParam = Array.isArray(limit) ? limit[0] : limit;
+
+         const currentPage = Math.max(1, parseInt(String(pageParam), 10) || 1);
+         const limitPerPage = Math.max(1, Math.min(100, parseInt(String(limitParam), 10) || 10));
 
         const offset = (currentPage -1) * limitPerPage;
 
