@@ -29,9 +29,8 @@ export const subjectRetrieval = async (req: express.Request, res: express.Respon
 
         //If department filter exists, match department name
         if(department) {
-            filterConditions.push(
-                ilike(departments.name, `%${department}%`)
-            );
+            const deptPattern = `%${String(department).replace(/[%_]/g, '\\$&')}%`;
+            filterConditions.push(ilike(departments.name, deptPattern));
         }
 
         //Combine all filters using AND if any exist
